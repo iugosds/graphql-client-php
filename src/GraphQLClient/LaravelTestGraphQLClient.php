@@ -18,6 +18,8 @@ class LaravelTestGraphQLClient extends Client
     /** @var Application */
     private $app;
 
+    protected $response;
+
     /**
      * WebTestGraphQLClient constructor.
      *
@@ -27,13 +29,13 @@ class LaravelTestGraphQLClient extends Client
     public function __construct(Application $app, string $baseUrl)
     {
         parent::__construct($baseUrl);
-
+        $this->response = null;
         $this->app = $app;
     }
 
     protected function postQuery(array $data): array
     {
-        $this->post($this->getBaseUrl(), $data);
+        $this->response = $this->post($this->getBaseUrl(), $data);
 
         if ($this->response->getStatusCode() >= 400) {
             throw new GraphQLException(sprintf(
